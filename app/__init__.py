@@ -14,7 +14,8 @@ login_manager = LoginManager()
 login_manager.login_view = 'main.login'
 
 def create_app(config_class=Config):
-    app = Flask(__name__)
+    # Specify the template and static folder paths relative to this file's location
+    app = Flask(__name__, template_folder='../templates', static_folder='../static')
     app.config.from_object(config_class)
 
     db.init_app(app)
@@ -35,5 +36,6 @@ def create_app(config_class=Config):
         db.create_all()
 
     return app
+
 
 
