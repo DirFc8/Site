@@ -1,0 +1,27 @@
+<!-- templates/user.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ user.username }}'s Profile{% endblock %}
+
+{% block content %}
+<div class="profile-container fade-in">
+    <div class="profile-card slide-up">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <img src="{{ url_for('static', filename='uploads/' + user.avatar) }}" alt="{{ user.username }}">
+            </div>
+            <h2>{{ user.username }}</h2>
+        </div>
+        <div class="profile-info">
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Last seen:</strong> {{ user.last_seen.strftime('%Y-%m-%d %H:%M') }}</p>
+            <p><strong>Message count:</strong> {{ user.messages_sent.count() }}</p>
+        </div>
+        {% if user == current_user %}
+        <div class="profile-actions">
+            <a href="#" class="btn btn-secondary">Edit Profile</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
