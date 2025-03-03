@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: realtime-chat-app
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --worker-class eventlet -w 1 wsgi:app
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: realtime-chat-db
+          property: connectionString
+      - key: UPLOAD_FOLDER
+        value: static/uploads
+      - key: FLASK_APP
+        value: wsgi.py
+      - key: FLASK_ENV
+        value: production
+
+databases:
+  - name: realtime-chat-db
+    databaseName: realtime_chat
+    user: realtime_chat_user
