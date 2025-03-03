@@ -2,7 +2,7 @@ services:
   - type: web
     name: realtime-chat-app
     env: python
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r migrations/requirements.txt
     startCommand: gunicorn --worker-class eventlet -w 1 wsgi:app
     envVars:
       - key: SECRET_KEY
