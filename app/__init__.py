@@ -30,4 +30,10 @@ def create_app(config_class=Config):
 
     from app import socket_events
 
+    # Automatically create database tables if they don't exist
+    with app.app_context():
+        db.create_all()
+
     return app
+
+
