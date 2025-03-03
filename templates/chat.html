@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Chat Room{% endblock %}
+
+{% block head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="users-panel">
+        <div class="users-header">
+            <h3>Online Users</h3>
+        </div>
+        <div class="users-list" id="users-list">
+            {% for user in users %}
+            <div class="user-item" data-user-id="{{ user.id }}">
+                <div class="user-avatar">
+                    <img src="{{ url_for('static', filename='uploads/' + user.avatar) }}" alt="{{ user.username }}">
+                    <span class="status-indicator offline"></span>
+                </div>
+                <div class="user-info">
+                    <span class="username">{{ user.username }}</span>
+                    <span class="last-seen">Last seen: {{ user.last_seen.strftime('%H:%M') }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="chat-panel">
+        <div class="messages-container" id="messages-container">
+            {% for message in messages %}
+            <div class="message-wrapper {% if message.user_id == current_user.id %}outgoing{% else %}incoming{% endif %}">
+                <div class="message">
+                    <div class="message-sender">{{ message.author.username }}</div>
+                    <div class="message-content">
+                        {{ message.content }}
+                        {% if message.image_path %}
+                        <div class="message-image">
+                            <img src="{{ url_for('static', filename=message.image_path) }}" alt="Shared image">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="message-time">{{ message.timestamp.strftime('%H:%M') }}</div>
+                    <div class="message-status">
+                        {% if message.read %}
+                        <i class="fas fa-check-double"></i>
+                        {% else %}
+                        <i class="fas fa-check"></i>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="message-form">
+            <form id="message-form" enctype="multipart/form-data">
+                <div class="image-preview" id="image-preview"></div>
+                <div class="form-controls">
+                    <label for="image-upload" class="upload-btn">
+                        <i class="fas fa-image"></i>
+                    </label>
+                    <input type="file" id="image-upload" name="image" accept="image/*" hidden>
+                    <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off">
+                    <button type="submit" class="send-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/socket.js') }}"></script>
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+<script src="{{ url_for('static', filename='js/ui.js') }}"></script>
+{% endblock %}
